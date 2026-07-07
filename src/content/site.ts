@@ -12,7 +12,7 @@ export const site = {
     linkedin: "https://linkedin.com/in/daisy-milan-04993bb9",
   },
   resumeUrl: "/resume/daisy-milan-resume.pdf",
-  url: "https://daisymilan.dev",
+  url: "https://daisy-portfolio-rho.vercel.app",
   metaDescription:
     "Daisy Milan is a full-stack developer and AI systems engineer building AI agents, workflow automation, and production business systems with Next.js, n8n, and modern LLMs.",
 } as const;

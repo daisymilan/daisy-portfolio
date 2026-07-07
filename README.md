@@ -4,8 +4,9 @@ Personal portfolio and case-study site for Daisy Milan (AI Systems Engineer /
 Automation Architect), built with Next.js 16 (App Router), TypeScript,
 Tailwind CSS v4, and Framer Motion.
 
-**Live:** deploy to Vercel (see below) · **Stack:** Next.js · React 19 ·
-TypeScript · Tailwind CSS v4 · Framer Motion · Mermaid · MDX
+**Live:** [daisy-portfolio-rho.vercel.app](https://daisy-portfolio-rho.vercel.app) ·
+**Stack:** Next.js · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion ·
+Mermaid · MDX
 
 ## Getting started
 
