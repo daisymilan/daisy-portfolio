@@ -144,10 +144,25 @@ export default function AboutPage() {
             </Reveal>
             <Reveal delay={0.05}>
               <SectionHeading eyebrow="Certifications" title="Training" />
-              <ul className="mt-6 space-y-2">
+              <ul className="mt-6 space-y-4">
                 {certifications.map((cert) => (
-                  <li key={cert} className="text-sm text-muted">
-                    {cert}
+                  <li key={cert.name}>
+                    <p className="text-sm font-medium text-foreground">
+                      {cert.name}
+                    </p>
+                    {cert.issuer && (
+                      <p className="text-sm text-muted">{cert.issuer}</p>
+                    )}
+                    {cert.verifyUrl && (
+                      <a
+                        href={cert.verifyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-1 inline-block text-sm font-medium text-accent-start hover:underline"
+                      >
+                        Verify Certificate
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

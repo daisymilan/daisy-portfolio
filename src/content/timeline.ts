@@ -7,7 +7,7 @@ export type TimelineEntry = {
 
 export const timeline: TimelineEntry[] = [
   {
-    period: "2024 — Present",
+    period: "2022 — Present",
     title: "Automation Engineer & Systems Consultant",
     org: "Freelance",
     description:
@@ -35,8 +35,24 @@ export const education = [
   },
 ];
 
-export const certifications = [
-  "Shopify & Facebook Ads Training",
-  "Facebook Messaging Ads Course",
-  "TESOL Certification",
+export type Certification = {
+  name: string;
+  issuer?: string;
+  verifyUrl?: string;
+};
+
+export const certifications: Certification[] = [
+  {
+    name: "Claude 101",
+    issuer: "Anthropic / Skilljar",
+    verifyUrl: "https://verify.skilljar.com/c/65nacj5p3qax",
+  },
+  {
+    name: "Claude Code",
+    issuer: "Anthropic / Skilljar",
+    verifyUrl: "https://verify.skilljar.com/c/aa92f3ws29aw",
+  },
+  { name: "Shopify & Facebook Ads Training" },
+  { name: "Facebook Messaging Ads Course" },
+  { name: "TESOL Certification" },
 ];

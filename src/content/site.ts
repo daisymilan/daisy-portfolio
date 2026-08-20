@@ -11,7 +11,7 @@ export const site = {
     github: "https://github.com/daisymilan",
     linkedin: "https://linkedin.com/in/daisy-milan-04993bb9",
   },
-  resumeUrl: "/resume/daisy-milan-resume.pdf",
+  resumeUrl: "/resume/daisy-milan-ai-automation-resume.pdf",
   url: "https://daisy-portfolio-rho.vercel.app",
   metaDescription:
     "Daisy Milan is a full-stack developer and AI systems engineer building AI agents, workflow automation, and production business systems with Next.js, n8n, and modern LLMs.",
