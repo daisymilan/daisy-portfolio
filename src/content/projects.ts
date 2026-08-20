@@ -1,5 +1,6 @@
 export type Metric = { label: string; value: string };
 export type ChallengeSolution = { challenge: string; solution: string };
+export type CapabilityGroup = { title: string; items: string[] };
 
 export type Project = {
   slug: string;
@@ -15,7 +16,15 @@ export type Project = {
   architectureDiagram?: string;
   techStack: string[];
   highlights: string[];
+  /** Pull-quote style positioning statement, shown near the hero for flagship projects. */
+  positioning?: string;
+  /** Feature areas grouped by subsystem, e.g. "AI Lead Intelligence", "Security". */
+  capabilities?: CapabilityGroup[];
   challenges?: ChallengeSolution[];
+  /** Notable architecture/engineering decisions, shown as a standalone list. */
+  engineeringDecisions?: string[];
+  /** Testing and verification approach. */
+  testing?: string[];
   impact: string;
   metrics?: Metric[];
   lessonsLearned?: string[];
@@ -25,6 +34,181 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    slug: "opspilot",
+    name: "OpsPilot",
+    category: "AI Systems / Automation / Full-Stack",
+    featured: true,
+    order: 0,
+    summary:
+      "A full-stack AI operations platform that analyzes leads, orchestrates workflows, routes high-risk actions through human approval, and maintains an auditable execution trail.",
+    overview:
+      "OpsPilot is a production-oriented AI operations platform that connects lead intake, AI intelligence, business rules, human approval, workflow orchestration, and operational monitoring into a single system. A lead moves from intake through AI analysis, confidence and priority evaluation, business-rule decisions, human approval when required, workflow execution, and audit logging — all as one traceable pipeline instead of five disconnected tools.",
+    problem:
+      "AI-generated recommendations and automated workflows are easy to prototype separately, but hard to trust together — most 'AI automation' stacks either let the model act unchecked or bottleneck everything behind a human, with no structured way to decide which actions need a person and no record of what actually happened.",
+    businessGoal:
+      "Give every lead a consistent path from intake to resolution: AI does the first-pass analysis, business rules decide what's safe to automate, a human approves anything higher-risk, and every step — AI output, decision, approval, execution — is written to an auditable trail.",
+    solution:
+      "A Next.js app on Vercel handles intake, dashboards, and the approval UI, backed by Supabase/PostgreSQL with Row Level Security for multi-tenant data isolation. Leads are analyzed through an AI provider abstraction currently backed by Anthropic Claude, producing structured output — confidence score, priority, and recommended action — that business rules evaluate to decide whether a workflow can run automatically or needs human approval first. n8n acts as a thin orchestration layer that triggers and sequences workflow execution once a lead is cleared to proceed, while the application itself owns the business logic, authorization, and audit logging.",
+    architectureDiagram: `flowchart TD
+    A[Lead Intake] --> B[Next.js / Vercel]
+    B --> C[(Supabase / PostgreSQL + RLS)]
+    C --> D[AI Analysis — Claude]
+    D --> E[Confidence + Priority Scoring]
+    E --> F[Business Rules Engine]
+    F -->|Auto-approved| G[n8n Orchestration]
+    F -->|Requires review| H[Human Approval Center]
+    H -->|Approved| G
+    H -->|Rejected| K[Audit Trail]
+    G --> I[Workflow Execution]
+    I --> J[Execution Explorer]
+    I --> K
+    J --> K`,
+    techStack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase",
+      "PostgreSQL",
+      "Supabase Auth",
+      "Row Level Security",
+      "n8n",
+      "Anthropic Claude",
+      "REST APIs",
+      "Webhooks",
+      "Server Actions",
+      "Zod",
+      "Vitest",
+      "Vercel",
+    ],
+    highlights: [
+      "AI lead intelligence",
+      "Human approval workflow",
+      "Multi-tenant Row Level Security",
+      "n8n workflow orchestration",
+      "Append-only audit trail",
+      "Operations dashboard",
+      "Webhook authentication",
+      "Production deployment",
+    ],
+    positioning:
+      "Built a multi-tenant AI operations platform where AI analysis, workflow orchestration, database security, human approval, and operational monitoring work as one system — not five separate tools stitched together.",
+    capabilities: [
+      {
+        title: "AI Lead Intelligence",
+        items: [
+          "Lead intake and persistence",
+          "AI-powered lead analysis with structured output",
+          "Confidence scoring and priority classification",
+          "Recommended-action generation",
+          "Business-rule evaluation",
+          "AI provider abstraction with Anthropic Claude integration for structured lead intelligence",
+        ],
+      },
+      {
+        title: "Human Approval Center",
+        items: [
+          "Pending approval queue with AI score, confidence, priority, and reasoning surfaced inline",
+          "Recently-decided approvals history",
+          "Approve/reject workflow with required rejection reasons",
+          "Role-based authorization",
+          "Database-level authorization enforced through RLS",
+        ],
+      },
+      {
+        title: "Execution Explorer",
+        items: [
+          "Workflow execution history with status and timeline",
+          "Execution detail views",
+          "Audit events per execution",
+          "Failed-execution handling with retry support",
+        ],
+      },
+      {
+        title: "Operations Dashboard",
+        items: [
+          "Lead and analysis KPIs",
+          "Execution metrics, including average execution duration",
+          "Database health",
+          "n8n health",
+          "AI-provider health state",
+        ],
+      },
+      {
+        title: "Security",
+        items: [
+          "Organization-based multi-tenancy",
+          "Supabase authentication",
+          "PostgreSQL Row Level Security for tenant isolation",
+          "Service-role separation for protected system tables",
+          "Webhook secret authentication with timing-safe comparison",
+          "Append-only audit logging",
+          "Role-based approval permissions",
+          "Server-side AI and API calls",
+        ],
+      },
+      {
+        title: "Production Architecture",
+        items: [
+          "GitHub → Vercel deployment",
+          "Supabase Cloud",
+          "n8n Cloud",
+          "Production webhooks",
+          "Environment-based secret management",
+          "Production error handling",
+          "Automated CI checks",
+        ],
+      },
+    ],
+    challenges: [
+      {
+        challenge: "Letting AI drive business actions directly creates unbounded risk — but requiring human approval on everything defeats the point of automation.",
+        solution:
+          "Kept n8n as a thin orchestration layer and business logic in application services: AI output feeds a business-rules evaluation that decides per lead whether execution can proceed automatically or must route through the Human Approval Center first, with confidence and priority as the deciding signals.",
+      },
+      {
+        challenge: "AI responses are naturally unstructured text, but downstream business rules and the approval UI need reliable, typed data to act on.",
+        solution:
+          "Wrapped the AI provider behind an abstraction that validates structured output (confidence score, priority, recommended action) with Zod before it reaches business rules, so a malformed or unexpected AI response fails loudly instead of silently corrupting a decision.",
+      },
+      {
+        challenge: "Multi-tenant data with an orchestration layer and AI calls all touching the same tables is a wide attack surface for cross-tenant leaks.",
+        solution:
+          "Enforced tenant isolation at the database layer with PostgreSQL Row Level Security rather than relying on application-level filtering alone, and separated service-role writes for protected system tables (like audit logs) from the RLS-scoped access used everywhere else.",
+      },
+      {
+        challenge: "n8n workflows need to trigger protected application actions over webhooks without becoming an open door into the system.",
+        solution:
+          "Authenticated inbound webhooks with a shared secret compared using timing-safe comparison, keeping n8n's role limited to sequencing and execution rather than trusted business logic.",
+      },
+    ],
+    engineeringDecisions: [
+      "n8n is used strictly as a thin orchestration layer — sequencing and triggering execution — while all business logic, validation, and authorization live in the application, so the automation platform never becomes the source of truth for decisions.",
+      "AI output is validated as structured, typed data (via Zod) rather than trusted as free text, so downstream business rules and the approval UI always work against a known shape.",
+      "Tenant isolation is enforced at the database layer with PostgreSQL Row Level Security, not just in application code, so a bug in a query can't leak data across organizations.",
+      "Writes to protected system tables (like the audit log) go through a separate service-role path from normal RLS-scoped user access, keeping the append-only audit trail tamper-resistant from the application layer itself.",
+      "High-risk or low-confidence actions are routed through an explicit Human Approval Center rather than a blanket approval-for-everything or approval-for-nothing rule, using confidence and priority scoring to decide which leads need a person.",
+      "Every stage — AI analysis, business-rule decision, approval outcome, workflow execution — writes to an audit trail, so the system's behavior is reconstructable after the fact, not just observable while it runs.",
+    ],
+    testing: [
+      "Vitest test suite",
+      "Automated CI checks running on GitHub before deployment",
+      "Explicit failed-execution states with retry support, exercised through the Execution Explorer",
+      "Production error handling across the Next.js, Supabase, and n8n boundaries",
+    ],
+    impact:
+      "OpsPilot is a real, deployed system connecting AI analysis, workflow orchestration, database security, human approval, and operational monitoring into a single auditable pipeline — built to demonstrate production-grade AI systems engineering, not a scripted demo.",
+    lessonsLearned: [
+      "Keeping the orchestration layer (n8n) intentionally thin made the system far easier to reason about — every important decision has one place to look, the application, instead of being split across workflow nodes.",
+      "Structured-output validation at the AI boundary caught more integration issues than any amount of prompt tuning would have.",
+    ],
+    futureImprovements: [
+      "Expand the AI provider abstraction to support additional models behind the same structured-output contract.",
+      "Add configurable business rules per organization instead of a single shared rule set.",
+    ],
+    github: "https://github.com/daisymilan/opspilot-ai-automation",
+  },
   {
     slug: "enterprise-ai-voice-call-center",
     name: "Enterprise AI Voice Call Center",

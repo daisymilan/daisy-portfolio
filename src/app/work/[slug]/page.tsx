@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, Lightbulb, Rocket } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink, Lightbulb, Rocket } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { TechPill } from "@/components/ui/tech-pill";
 import { MermaidDiagram } from "@/components/ui/mermaid-diagram";
+import { GithubIcon } from "@/components/ui/social-icons";
 import { CaseStudyCard } from "@/components/work/case-study-card";
 import { featuredProjects, getProjectBySlug } from "@/content/projects";
 
@@ -75,6 +76,12 @@ export default async function CaseStudyPage({
                 <TechPill key={tech}>{tech}</TechPill>
               ))}
             </div>
+
+            {project.positioning && (
+              <p className="mt-8 max-w-2xl border-l-2 border-accent-start pl-5 text-lg font-medium leading-relaxed text-foreground">
+                {project.positioning}
+              </p>
+            )}
           </Reveal>
         </Container>
       </Section>
@@ -134,6 +141,38 @@ export default async function CaseStudyPage({
         </Section>
       )}
 
+      {project.capabilities && project.capabilities.length > 0 && (
+        <Section>
+          <Container>
+            <Reveal>
+              <SectionHeading eyebrow="Capabilities" title="What it does" />
+            </Reveal>
+            <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {project.capabilities.map((group) => (
+                <RevealItem
+                  key={group.title}
+                  className="rounded-2xl border border-border bg-surface p-6"
+                >
+                  <h3 className="text-sm font-semibold text-foreground">
+                    {group.title}
+                  </h3>
+                  <ul className="mt-4 space-y-2">
+                    {group.items.map((item, i) => (
+                      <li
+                        key={i}
+                        className="text-sm leading-relaxed text-muted"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </Container>
+        </Section>
+      )}
+
       {project.challenges && project.challenges.length > 0 && (
         <Section>
           <Container>
@@ -170,7 +209,44 @@ export default async function CaseStudyPage({
         </Section>
       )}
 
-      <Section className="border-t border-border bg-surface/40">
+      {(project.engineeringDecisions || project.testing) && (
+        <Section className="border-t border-border bg-surface/40">
+          <Container>
+            <div className="grid gap-10 sm:grid-cols-2">
+              {project.engineeringDecisions && (
+                <Reveal>
+                  <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground">
+                    Engineering Decisions
+                  </h2>
+                  <ul className="mt-4 space-y-3">
+                    {project.engineeringDecisions.map((item, i) => (
+                      <li key={i} className="text-sm leading-relaxed text-muted">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </Reveal>
+              )}
+              {project.testing && (
+                <Reveal delay={0.05}>
+                  <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground">
+                    Testing &amp; Verification
+                  </h2>
+                  <ul className="mt-4 space-y-3">
+                    {project.testing.map((item, i) => (
+                      <li key={i} className="text-sm leading-relaxed text-muted">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </Reveal>
+              )}
+            </div>
+          </Container>
+        </Section>
+      )}
+
+      <Section className={project.engineeringDecisions || project.testing ? "" : "border-t border-border bg-surface/40"}>
         <Container>
           <Reveal>
             <SectionHeading eyebrow="Business Impact" title="What it changed" />
@@ -231,6 +307,35 @@ export default async function CaseStudyPage({
                 </Reveal>
               )}
             </div>
+          </Container>
+        </Section>
+      )}
+
+      {(project.github || project.demo) && (
+        <Section className="border-t border-border">
+          <Container>
+            <Reveal className="flex flex-wrap items-center gap-4">
+              {project.github && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-accent-start/50"
+                >
+                  <GithubIcon className="h-4 w-4" /> View source
+                </a>
+              )}
+              {project.demo && (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-accent-start/50"
+                >
+                  <ExternalLink className="h-4 w-4" aria-hidden="true" /> View live
+                </a>
+              )}
+            </Reveal>
           </Container>
         </Section>
       )}
