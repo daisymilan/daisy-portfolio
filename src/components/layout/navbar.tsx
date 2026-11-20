@@ -6,11 +6,11 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { navLinks, site } from "@/content/site";
+import { site, type NavLink } from "@/content/site";
 import { ThemeToggle } from "./theme-toggle";
 import { CommandPalette } from "./command-palette";
 
-export function Navbar() {
+export function Navbar({ links }: { links: NavLink[] }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -28,7 +28,7 @@ export function Navbar() {
         </Link>
 
         <ul className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => {
+          {links.map((link) => {
             const active =
               pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
@@ -49,7 +49,7 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <CommandPalette />
+          <CommandPalette showBlog={links.some((link) => link.href === "/blog")} />
           <ThemeToggle />
           <Link
             href="/contact"
@@ -83,7 +83,7 @@ export function Navbar() {
             className="overflow-hidden border-t border-border md:hidden"
           >
             <ul className="flex flex-col gap-1 px-6 py-4">
-              {navLinks.map((link) => (
+              {links.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

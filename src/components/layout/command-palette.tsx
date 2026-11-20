@@ -15,9 +15,10 @@ const staticPages = [
   { href: "/contact", label: "Contact", icon: Mail },
 ];
 
-export function CommandPalette() {
+export function CommandPalette({ showBlog }: { showBlog: boolean }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const pages = staticPages.filter((page) => page.href !== "/blog" || showBlog);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -75,7 +76,7 @@ export function CommandPalette() {
               No results found.
             </Command.Empty>
             <Command.Group heading="Pages" className="text-xs text-muted [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2">
-              {staticPages.map(({ href, label, icon: Icon }) => (
+              {pages.map(({ href, label, icon: Icon }) => (
                 <Command.Item
                   key={href}
                   value={label}

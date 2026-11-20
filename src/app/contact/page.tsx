@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Download, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Section, SectionHeading } from "@/components/ui/section";
-import { Reveal } from "@/components/ui/reveal";
+import { FadeIn } from "@/components/ui/fade-in";
 import { ContactForm } from "@/components/contact/contact-form";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/social-icons";
 import { site } from "@/content/site";
@@ -16,21 +16,21 @@ export default function ContactPage() {
   return (
     <Section className="pt-20 sm:pt-28">
       <Container>
-        <Reveal>
+        <FadeIn>
           <SectionHeading
             as="h1"
             eyebrow="Contact"
             title="Let's build something."
             description="Whether it's a role, a project, or just a question about how something was built — I read everything myself."
           />
-        </Reveal>
+        </FadeIn>
 
         <div className="mt-14 grid gap-12 lg:grid-cols-[1fr_320px]">
-          <Reveal delay={0.05}>
+          <FadeIn delay={0.05}>
             <ContactForm />
-          </Reveal>
+          </FadeIn>
 
-          <Reveal delay={0.1} className="space-y-6">
+          <FadeIn delay={0.1} className="space-y-6">
             <div className="rounded-2xl border border-border bg-surface p-6">
               <p className="text-xs font-medium uppercase tracking-wide text-muted">
                 Direct
@@ -81,7 +81,7 @@ export default function ContactPage() {
             >
               Download Resume <Download className="h-4 w-4" aria-hidden="true" />
             </a>
-          </Reveal>
+          </FadeIn>
         </div>
       </Container>
     </Section>

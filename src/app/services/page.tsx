@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
+import { FadeIn } from "@/components/ui/fade-in";
 import { MagneticLink } from "@/components/ui/magnetic-link";
 import { process } from "@/content/site";
 import { engagementFaq, services } from "@/content/services";
@@ -18,14 +19,14 @@ export default function ServicesPage() {
     <>
       <Section className="pb-0 pt-20 sm:pt-28">
         <Container>
-          <Reveal>
+          <FadeIn>
             <SectionHeading
               as="h1"
               eyebrow="Services"
               title="Where I can help."
               description="Four kinds of engagements, all pointed at the same outcome: less manual work, more reliable systems."
             />
-          </Reveal>
+          </FadeIn>
         </Container>
       </Section>
 

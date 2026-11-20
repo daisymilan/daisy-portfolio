@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
-import { Reveal } from "@/components/ui/reveal";
+import { FadeIn } from "@/components/ui/fade-in";
 import { mdxComponents } from "@/components/mdx-components";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 
@@ -36,7 +36,7 @@ export default async function BlogPostPage({
   return (
     <Section className="pt-16 sm:pt-24">
       <Container className="max-w-2xl">
-        <Reveal>
+        <FadeIn>
           <Link
             href="/blog"
             className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground"
@@ -49,11 +49,11 @@ export default async function BlogPostPage({
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
             {post.title}
           </h1>
-        </Reveal>
+        </FadeIn>
 
-        <Reveal delay={0.05} className="mt-10">
+        <FadeIn delay={0.05} className="mt-10">
           <MDXRemote source={post.content} components={mdxComponents} />
-        </Reveal>
+        </FadeIn>
       </Container>
     </Section>
   );

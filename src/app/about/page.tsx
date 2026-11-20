@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Container } from "@/components/ui/container";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
+import { FadeIn } from "@/components/ui/fade-in";
 import { Timeline } from "@/components/about/timeline";
 import { skillCategories } from "@/content/skills";
 import { certifications, education } from "@/content/timeline";
@@ -38,7 +39,7 @@ export default function AboutPage() {
       <Section className="pt-20 sm:pt-28">
         <Container>
           <div className="grid gap-8 sm:grid-cols-[180px_1fr] sm:items-start sm:gap-12">
-            <Reveal>
+            <FadeIn>
               <div className="w-28 overflow-hidden rounded-2xl border border-border sm:w-full">
                 <Image
                   src="/images/daisy-portrait.png"
@@ -49,15 +50,15 @@ export default function AboutPage() {
                   className="aspect-square w-full object-cover"
                 />
               </div>
-            </Reveal>
-            <Reveal delay={0.05}>
+            </FadeIn>
+            <FadeIn delay={0.05}>
               <SectionHeading
                 as="h1"
                 eyebrow="About"
                 title="An operator who learned to build."
                 description={site.bio}
               />
-            </Reveal>
+            </FadeIn>
           </div>
 
           <div className="mt-14 space-y-12">
