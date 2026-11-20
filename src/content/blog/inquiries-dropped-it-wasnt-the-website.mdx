@@ -1,0 +1,61 @@
+---
+title: "Inquiries dropped after launch. It wasn't the website."
+excerpt: "How an evidence-first audit of one small business's lead path found the real leaks in places no code change would have fixed."
+date: "2026-11-21"
+---
+
+A few weeks after I launched a new website for a small architecture firm, the owner told me inquiries had dropped to almost nothing. Even repeat clients overseas had gone quiet.
+
+When that happens right after a launch, everyone assumes the same thing, including the developer: the new site broke something. The tempting move is to start changing things. I did the opposite. The owner and I agreed that nothing would change until we knew what was actually wrong.
+
+## Follow the prospect, not the code
+
+A lead doesn't start on your website. It starts with a search, passes through a business listing or a social page, lands on the site, goes through a contact form, and ends in an inbox. Any link in that chain can drop it.
+
+So the audit followed that path in order:
+
+1. What changed in the code around the date the drop began?
+2. Does a message sent through the contact form actually arrive?
+3. Is the site indexed, and where does it rank?
+4. What do the business listings and social pages say, and where do their buttons lead?
+
+For every suspected cause I wrote down a confidence level and the evidence for it. That one habit stopped me from "fixing" several things that were working fine.
+
+## The form was innocent (mostly)
+
+The contact form was the prime suspect. I sent a clearly labelled test submission and traced it through the form service to the inbox. It arrived, one for one.
+
+The test still found two real weaknesses. If the network failed mid-submit, the form sat on "Sending…" forever. And the form service's free tier can report success while sending nothing once you pass its monthly limit, which is the worst kind of failure because nobody sees it.
+
+I replaced the form with one that opens the visitor's own chat app or email with the inquiry already written, and copies it to the clipboard as a fallback. There's no third-party quota left to exhaust silently.
+
+## The real leaks were outside the site
+
+The findings that mattered most had nothing to do with code:
+
+- A business listing was still showing an **old phone number**.
+- The firm's **map pin was in the ocean**, a side effect of how its service areas had been configured.
+- A social page's chat button pointed at **a number nobody checked anymore**.
+
+No amount of work on the website would have fixed any of these. A prospect who tapped "call" from a search result never reached the site at all.
+
+## What the numbers did afterward
+
+With the leaks closed, I worked on visibility: longer location pages, a set of guides, properly indexed Filipino-language pages, accurate sitemap dates, and one source of truth for business facts that feeds the pages, the structured data, and a plain-text summary for AI tools.
+
+Over roughly a month:
+
+- Pages in Google's index went from **14 to 39**.
+- Tracked searches on page one went from **4 of 14 to 11 of 20**.
+- Search clicks per 28 days went from **32 to 81**.
+
+I'm not claiming inquiries have recovered. Some rankings are still volatile, and a few weeks of data isn't enough to say. Follow-up checks are on a schedule, and the answer will come from those, not from optimism.
+
+## What I'd tell another developer
+
+- **Audit before you edit.** A change made on a hunch destroys the evidence you need.
+- **Test the path end to end.** "The form works on my machine" proves nothing about what reaches the inbox.
+- **Look outside the repo.** Listings, map pins, and chat buttons are part of the product, even though they're not in your codebase.
+- **Say what you don't know.** Reporting "visibility is up, leads not yet proven" is more useful to a client than a victory lap.
+
+The full write-up is in the [case study](/work/architecture-firm-website-search-recovery).

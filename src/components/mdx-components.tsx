@@ -16,6 +16,9 @@ export const mdxComponents: MDXComponents = {
   ol: (props) => (
     <ol className="mt-4 list-decimal space-y-2 pl-5 text-base text-muted" {...props} />
   ),
+  strong: (props) => (
+    <strong className="font-semibold text-foreground" {...props} />
+  ),
   a: (props) => (
     <a className="text-foreground underline underline-offset-4 hover:text-accent-start" {...props} />
   ),

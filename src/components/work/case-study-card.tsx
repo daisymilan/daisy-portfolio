@@ -25,6 +25,11 @@ export function CaseStudyCard({ project }: { project: Project }) {
         <p className="mt-3 text-sm leading-relaxed text-muted">
           {project.summary}
         </p>
+        {project.status && (
+          <p className="mt-4 text-xs font-medium text-muted">
+            {project.status}
+          </p>
+        )}
       </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
