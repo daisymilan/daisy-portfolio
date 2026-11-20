@@ -24,6 +24,8 @@ export const navLinks = [
   { href: "/blog", label: "Blog" },
 ] as const;
 
+export type NavLink = (typeof navLinks)[number];
+
 export const process = [
   {
     step: "01",

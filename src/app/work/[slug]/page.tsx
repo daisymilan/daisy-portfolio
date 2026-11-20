@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, ExternalLink, Lightbulb, Rocket } from "lucide-r
 import { Container } from "@/components/ui/container";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
+import { FadeIn } from "@/components/ui/fade-in";
 import { TechPill } from "@/components/ui/tech-pill";
 import { MermaidDiagram } from "@/components/ui/mermaid-diagram";
 import { GithubIcon } from "@/components/ui/social-icons";
@@ -53,7 +54,7 @@ export default async function CaseStudyPage({
     <>
       <Section className="pb-0 pt-16 sm:pt-24">
         <Container>
-          <Reveal>
+          <FadeIn>
             <Link
               href="/work"
               className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground"
@@ -82,7 +83,7 @@ export default async function CaseStudyPage({
                 {project.positioning}
               </p>
             )}
-          </Reveal>
+          </FadeIn>
         </Container>
       </Section>
 

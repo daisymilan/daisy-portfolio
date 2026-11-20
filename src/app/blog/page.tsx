@@ -4,12 +4,17 @@ import { FileText } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
+import { FadeIn } from "@/components/ui/fade-in";
 import { getAllPosts } from "@/lib/blog";
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description: "Notes on building AI agents, automation systems, and full-stack products.",
-};
+export function generateMetadata(): Metadata {
+  return {
+    title: "Blog",
+    description: "Notes on building AI agents, automation systems, and full-stack products.",
+    // Keep the empty state out of search results until the first post ships.
+    robots: getAllPosts().length > 0 ? undefined : { index: false, follow: true },
+  };
+}
 
 export default function BlogPage() {
   const posts = getAllPosts();
@@ -17,14 +22,14 @@ export default function BlogPage() {
   return (
     <Section className="pt-20 sm:pt-28">
       <Container>
-        <Reveal>
+        <FadeIn>
           <SectionHeading
             as="h1"
             eyebrow="Writing"
             title="Notes from the build."
             description="Longer-form thinking on AI agents, automation architecture, and shipping production systems."
           />
-        </Reveal>
+        </FadeIn>
 
         {posts.length === 0 ? (
           <Reveal delay={0.1} className="mt-16 flex flex-col items-center gap-4 rounded-3xl border border-dashed border-border py-20 text-center">

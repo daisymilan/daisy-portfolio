@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
+import { FadeIn } from "@/components/ui/fade-in";
 import { CaseStudyCard } from "@/components/work/case-study-card";
 import { ProjectGridCard } from "@/components/work/project-grid-card";
 import { featuredProjects, gridProjects } from "@/content/projects";
@@ -17,14 +18,14 @@ export default function WorkPage() {
     <>
       <Section className="pb-0 pt-20 sm:pt-28">
         <Container>
-          <Reveal>
+          <FadeIn>
             <SectionHeading
               as="h1"
               eyebrow="Work"
               title="Selected case studies."
-              description="Five systems worth walking through in depth — architecture, decisions, and what shipped. Everything below is anonymized; no client or company names appear on this site."
+              description="The systems worth walking through in depth — architecture, decisions, and what shipped. Everything below is anonymized; no client or company names appear on this site."
             />
-          </Reveal>
+          </FadeIn>
         </Container>
       </Section>
 

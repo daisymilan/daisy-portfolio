@@ -39,6 +39,8 @@ export function ProjectGridCard({ project }: { project: Project }) {
 
       <div
         id={panelId}
+        // While collapsed, keep the hidden details out of screen readers and tab order.
+        inert={!open}
         className={cn(
           "grid overflow-hidden transition-all duration-300",
           open ? "mt-5 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"

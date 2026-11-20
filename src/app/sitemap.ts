@@ -4,7 +4,12 @@ import { featuredProjects } from "@/content/projects";
 import { getAllPosts } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/work", "/about", "/services", "/blog", "/contact"].map(
+  const posts = getAllPosts();
+  const routes = ["", "/work", "/about", "/services", "/contact"];
+  // Only list the blog index once there's something on it.
+  if (posts.length > 0) routes.push("/blog");
+
+  const staticRoutes = routes.map(
     (route) => ({
       url: `${site.url}${route}`,
       lastModified: new Date(),
@@ -20,7 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const blogRoutes = getAllPosts().map((post) => ({
+  const blogRoutes = posts.map((post) => ({
     url: `${site.url}/blog/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: "yearly" as const,

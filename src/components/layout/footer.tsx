@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Mail } from "lucide-react";
-import { navLinks, site } from "@/content/site";
+import { site, type NavLink } from "@/content/site";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/social-icons";
 
-export function Footer() {
+export function Footer({ links }: { links: NavLink[] }) {
   return (
     <footer className="mt-auto border-t border-border">
       <div className="mx-auto max-w-6xl px-6 py-12">
@@ -19,7 +19,7 @@ export function Footer() {
                 Site
               </p>
               <ul className="mt-3 space-y-2">
-                {navLinks.map((link) => (
+                {links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}

@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { ArrowRight, Download } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { MagneticLink } from "@/components/ui/magnetic-link";
@@ -8,49 +5,45 @@ import { site } from "@/content/site";
 import { HeroBackground } from "./hero-background";
 
 const words = site.headline.split(" ");
+const afterHeadline = 0.05 * words.length;
+
+// Entrance animations here are pure CSS (animate-fade-up + animation-delay),
+// so the headline is visible on first paint instead of waiting for JS.
+function delay(seconds: number) {
+  return { animationDelay: `${seconds}s` };
+}
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden">
       <HeroBackground />
       <Container className="relative py-28 sm:py-36">
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="font-mono text-sm text-accent-start"
-        >
+        <p className="animate-fade-up font-mono text-sm text-accent-start">
           Hi, I&rsquo;m {site.name.split(" ")[0]}.
-        </motion.p>
+        </p>
 
         <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.1] tracking-tight text-foreground sm:text-6xl">
           {words.map((word, i) => (
-            <motion.span
+            <span
               key={i}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.05 * i, ease: [0.16, 1, 0.3, 1] }}
-              className="mr-[0.25em] inline-block"
+              className="mr-[0.25em] inline-block animate-fade-up"
+              style={delay(0.05 * i)}
             >
               {word}
-            </motion.span>
+            </span>
           ))}
         </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.05 * words.length + 0.1 }}
-          className="mt-6 max-w-xl text-lg text-muted"
+        <p
+          className="mt-6 max-w-xl animate-fade-up text-lg text-muted"
+          style={delay(afterHeadline + 0.1)}
         >
           {site.bio}
-        </motion.p>
+        </p>
 
-        <motion.ul
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.05 * words.length + 0.2 }}
-          className="mt-6 flex flex-wrap gap-2"
+        <ul
+          className="mt-6 flex animate-fade-in flex-wrap gap-2"
+          style={delay(afterHeadline + 0.2)}
         >
           {site.roleTags.map((tag) => (
             <li
@@ -60,13 +53,11 @@ export function Hero() {
               {tag}
             </li>
           ))}
-        </motion.ul>
+        </ul>
 
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.05 * words.length + 0.3 }}
-          className="mt-10 flex flex-wrap items-center gap-4"
+        <div
+          className="mt-10 flex animate-fade-up flex-wrap items-center gap-4"
+          style={delay(afterHeadline + 0.3)}
         >
           <MagneticLink
             href="/work"
@@ -81,7 +72,7 @@ export function Hero() {
           >
             Download Resume <Download className="h-4 w-4" aria-hidden="true" />
           </MagneticLink>
-        </motion.div>
+        </div>
       </Container>
     </section>
   );
