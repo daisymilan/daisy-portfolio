@@ -1,0 +1,52 @@
+---
+title: "A fallback that looks like success is worse than a failure"
+excerpt: "What running 18 store scrapers every day taught me about placeholder prices, misidentified platforms, and pipelines that lie politely."
+date: "2026-11-21"
+---
+
+I built a price-comparison app for construction materials: 18 scrapers, one per store, feeding a single dataset on a daily schedule. The front end was the easy part. The interesting lessons all came from the pipeline, and most of them were about honesty.
+
+## Know what you're scraping before you scrape it
+
+Several of my scrapers were "broken" for a reason that had nothing to do with their code: they were written for the wrong platform.
+
+Two stores I had assumed were on one storefront platform were actually on another. The old scraper was requesting a product feed that didn't exist, getting caught by a catch-all redirect, and returning about four products. It never threw an error. It reported four products and moved on.
+
+Another store looked like it needed a headless browser. It didn't. Its prices were sitting in the JSON the site embeds in its own pages, which is faster and far less fragile to read.
+
+Now the first thing in each scraper is a comment recording what the store actually runs and how I confirmed it.
+
+## The price that wasn't a price
+
+Some catalogs use `999999` to mean "price not set". Left alone, those items would appear as the most expensive product in every comparison.
+
+The fix is a filter, but it has to be strict. A real product can cost 999. The rule drops values that are six or more nines and nothing else. It's a tiny thing, and exactly the kind of data quirk that makes a comparison tool untrustworthy if you miss it.
+
+## A check that fails every day protects nothing
+
+I had a data-safety check in the scheduled job that compared totals between runs and failed the job if the ratio looked off. Sensible in theory.
+
+In practice the dataset grew every day and only some stores scraped live on any given run, so the ratio was always "off". The job failed on every run. When every run is red, red stops meaning anything, and a real failure would have been invisible.
+
+I downgraded the check to a warning and replaced it with something more useful: a per-store health report.
+
+## Make every source say whether it's live
+
+Each scraper tries its live source first and falls back to a seed list if that fails. The fallback keeps the app working. It also creates the most dangerous state a pipeline can be in: output that looks complete but is quietly stale.
+
+So every run now records, per store, whether it was **live** or **not live**, with the captured failure reason and a label for known causes such as blocked access, the wrong catalog, or no public catalog at all. An admin page shows it.
+
+On the most recent run, 8 of the 18 stores scraped live. That's not a number to be proud of, and that's the point. I'd rather publish "8 of 18" than a dashboard that says everything is fine.
+
+## The numbers
+
+- **18** store scrapers
+- **28,053** products in the dataset on the latest run
+- **105** consecutive daily automated runs
+- App JavaScript cut from **3.3 MB to 305 KB** by moving the dataset out of the bundle and loading it in the background
+
+## What I'd do differently
+
+I'd add tests for the normalizer first, since unit and brand clean-up is where subtle errors hide. And I'd connect the daily dataset to the front end directly; right now the app loads an older snapshot, which is a gap between "the pipeline works" and "the user sees fresh data" that I should have closed sooner.
+
+The architecture and the rest of the details are in the [case study](/work/building-materials-price-comparison).

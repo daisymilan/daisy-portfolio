@@ -31,11 +31,17 @@ export type Project = {
   futureImprovements?: string[];
   github?: string;
   demo?: string;
+  /** Short label for what kind of work this was, e.g. "Client work · in production". */
+  status?: string;
+  /** What Daisy personally did on it. */
+  role?: string;
 };
 
 export const projects: Project[] = [
   {
     slug: "opspilot",
+    status: "Personal project · deployed",
+    role: "Sole developer — design, build, and deployment",
     name: "OpsPilot",
     category: "AI Systems / Automation / Full-Stack",
     featured: true,
@@ -211,6 +217,8 @@ export const projects: Project[] = [
   },
   {
     slug: "enterprise-ai-voice-call-center",
+    status: "Client work · anonymized",
+    role: "Designed and built the call flows and integrations",
     name: "Enterprise AI Voice Call Center",
     category: "AI Voice & Telephony",
     featured: true,
@@ -272,6 +280,8 @@ export const projects: Project[] = [
   },
   {
     slug: "driver-compliance-automation-platform",
+    status: "Client work · in production",
+    role: "Designed and built the workflows end to end",
     name: "Driver Compliance Automation Platform",
     category: "Business Process Automation",
     featured: true,
@@ -323,6 +333,16 @@ export const projects: Project[] = [
         solution:
           "Every workflow writes state transitions to Postgres, and a dedicated monitoring flow polls for cases that haven't advanced within an expected window, escalating to Slack instead of failing silently.",
       },
+      {
+        challenge: "Staff sometimes update a case by hand in the dashboard, which would leave the automation out of step.",
+        solution:
+          "A database trigger calls the matching workflow whenever a case's status changes, so a manual edit advances the pipeline the same way an automated step does.",
+      },
+      {
+        challenge: "Payments arrive through more than one payment account, as deposits or in full, and a missed or double-counted payment stalls a case.",
+        solution:
+          "A polling workflow merges both accounts, looks back over a short overlapping window, de-duplicates by payment ID, and only advances cases still at the payment stage — with final results held until the balance is paid.",
+      },
     ],
     impact:
       "Replaced a complex manual compliance workflow with a fully automated pipeline capable of processing cases with minimal human intervention, from payment through to a completed compliance record.",
@@ -337,6 +357,8 @@ export const projects: Project[] = [
   },
   {
     slug: "ai-social-media-publishing-platform",
+    status: "Architecture design",
+    role: "Designed the system architecture",
     name: "AI Social Media Publishing Platform",
     category: "AI Content & Marketing",
     featured: true,
@@ -396,6 +418,8 @@ export const projects: Project[] = [
   },
   {
     slug: "ai-knowledge-base-assistant",
+    status: "Client work · anonymized",
+    role: "Designed retrieval, prompts, and the chat workflow",
     name: "AI Knowledge Base Assistant",
     category: "AI Agents & RAG",
     featured: true,
@@ -453,6 +477,8 @@ export const projects: Project[] = [
   },
   {
     slug: "rental-lead-automation-platform",
+    status: "Client work · anonymized",
+    role: "Designed and built the automation",
     name: "Rental Lead Automation Platform",
     category: "Lead & CRM Automation",
     featured: true,
@@ -500,6 +526,255 @@ export const projects: Project[] = [
     ],
     futureImprovements: [
       "Add confidence scoring on property matches and route low-confidence matches to a human review queue instead of a hard fail.",
+    ],
+  },
+  {
+    slug: "architecture-firm-website-search-recovery",
+    status: "Client work · live",
+    role: "Sole developer — site build, audit, and search work",
+    name: "Architecture Firm Website & Search Recovery",
+    category: "Full-Stack / SEO & AI Visibility",
+    featured: true,
+    order: 5.1,
+    summary:
+      "Built a multilingual lead-generation site for a licensed architecture firm, then ran an evidence-first audit when inquiries dropped — and found the real leaks were outside the website.",
+    overview:
+      "A statically generated Next.js site for a small architecture and interior design firm in the Philippines: portfolio, services, location pages, and guides, with content in seven languages. A few weeks after launch, inquiries dropped to almost nothing. Instead of guessing, I audited the whole path a prospect takes — search result, business listing, site, contact form, inbox — ranked each possible cause with a confidence level, and only then changed anything.",
+    problem:
+      "Inquiries fell to few or none, including from overseas repeat clients. The obvious suspect was the new website, but nothing in the site's own data explained it, and changing things at random risked making it worse.",
+    businessGoal:
+      "Find out where prospects were actually being lost, fix those points with the owner's approval at each step, and grow the firm's visibility in local search and in AI answers so new clients can find it in the first place.",
+    solution:
+      "All content lives as typed data and is rendered into static pages with structured data (LocalBusiness, Article, FAQ, VideoObject), an image-and-video sitemap with real last-modified dates, and separate server-rendered Filipino pages linked with hreflang. The audit worked in phases — what changed in git, the contact path, indexing, then listings and availability — with every finding logged in an issue register and verified on the live site after the fix.",
+    architectureDiagram: `flowchart TD
+    A[Typed content data] --> B[Next.js static pages]
+    B --> C[Structured data + sitemap]
+    B --> D[Filipino pages with hreflang]
+    C --> E[Google / Bing index]
+    D --> E
+    E --> F[Search results + AI answers]
+    G[Business listings] --> F
+    F --> H[Visitor on site]
+    H --> I[Inquiry via chat app or email]
+    I --> J[Firm's inbox]`,
+    techStack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Vercel",
+      "Cloudflare DNS",
+      "JSON-LD",
+      "Google Search Console",
+      "Google Business Profile",
+      "Bing Webmaster Tools",
+      "Lighthouse",
+    ],
+    highlights: [
+      "Seven-language content",
+      "Static generation",
+      "Structured data",
+      "Evidence-first audit",
+      "Local search",
+      "AI-answer visibility",
+      "Strict security headers",
+    ],
+    challenges: [
+      {
+        challenge: "The contact form was the prime suspect, but 'it seems broken' isn't evidence.",
+        solution:
+          "Sent a labelled test submission and matched it one-for-one through the form service to the inbox, which ruled the backend out. The same test exposed two real weaknesses — the form hung forever on a network failure, and the form service's free tier can report success while sending nothing once over its limit — so I replaced it with a form that opens the visitor's chat app or email with the inquiry already written.",
+      },
+      {
+        challenge: "The biggest leaks weren't in the code at all.",
+        solution:
+          "Following the prospect's path outside the site turned up a business listing still showing an old phone number, a map pin placed in the ocean because of how service areas had been configured, and a social-page chat button pointing at a number nobody checked. All three were fixed with the owner.",
+      },
+      {
+        challenge: "Half the site's pages weren't in Google's index.",
+        solution:
+          "Expanded thin location pages from roughly 150 to 600 words, added guides and an overseas-client landing page, made the Filipino pages indexable with hreflang, and corrected sitemap dates so crawlers could trust them.",
+      },
+      {
+        challenge: "A 37 MB walkthrough video was too heavy to serve directly.",
+        solution:
+          "Re-encoded it to about 6 MB with no visible quality loss, moved hosting to a video platform, and embedded it so the player only loads when clicked.",
+      },
+    ],
+    engineeringDecisions: [
+      "No backend, API routes, or environment variables — the site is fully static, which removes whole categories of failure for a business with no technical staff.",
+      "Business facts (phone, address, hours) live in one file that feeds the pages, the structured data, and a plain-text summary for AI tools, so they can't drift apart.",
+      "Every production change required owner approval first and a check on the live site after.",
+    ],
+    impact:
+      "Within a month, Google went from indexing about half the site to nearly all of it, and the firm reached page one for most of the searches being tracked. I'm deliberately not claiming a lead recovery yet: rankings for some searches are still volatile, and inquiry volume is being monitored on a schedule rather than assumed.",
+    metrics: [
+      { label: "Pages in Google's index (Oct 20 → Nov 18)", value: "14 → 39" },
+      { label: "Tracked searches on page one (Oct 20 → Nov 10)", value: "4 of 14 → 11 of 20" },
+      { label: "Search clicks per 28 days (Nov 3 → Nov 18)", value: "32 → 81" },
+      { label: "Mobile Lighthouse performance / SEO, home page", value: "95 / 100" },
+    ],
+    lessonsLearned: [
+      "When leads drop after a launch, audit the whole path from search result to inbox — the website is only one link in it.",
+      "Writing down a confidence level for each suspected cause stopped me from 'fixing' things that weren't broken.",
+    ],
+    futureImprovements: [
+      "Add automated tests and a CI check; today the only gate is the hosting platform's build.",
+      "Keep the scheduled follow-up checks running until there's enough data to say whether inquiries recovered.",
+    ],
+  },
+  {
+    slug: "brokerage-transaction-commission-dashboard",
+    status: "Client work · in production",
+    role: "Developer on the build — features, fixes, and deployment",
+    name: "Brokerage Transaction & Commission Dashboard",
+    category: "Internal Tools / Full-Stack",
+    featured: true,
+    order: 5.2,
+    summary:
+      "An internal app for a real-estate brokerage that tracks every deal, calculates commission splits, generates the payout paperwork, and uses AI to review each submission before it goes to accounting.",
+    overview:
+      "A web app used by a residential real-estate brokerage to track pending, closed, and cancelled transactions, calculate commission splits, and produce disbursement forms and commission sheets, with reports for owners, the accountant, and agents. It also covers agents, appointments, call logs, vendors, and lead sources.",
+    problem:
+      "Commission math has many branches — percentage or flat fee, inbound or outbound referrals, tiered program fees — and each deal ends in a signed payout form. Done by hand, every one of those is a chance for an error that reaches accounting.",
+    businessGoal:
+      "One place to record a deal, get the split right every time, produce the payout document automatically, and catch mistakes before submission rather than after.",
+    solution:
+      "A Node.js/Express server exposes about 40 API routes over a cloud SQL database and serves the single-page front end. Sign-in is handled by the company's Microsoft identity provider, with new users landing as read-only until an admin approves them. Payout forms are rendered to PDF on the server, stored in cloud storage, and linked on the transaction. Before submission, server-side math checks are passed to Claude, which returns a structured pass/score/errors review.",
+    architectureDiagram: `flowchart TD
+    A[Staff sign-in — company identity] --> B[Single-page app]
+    B --> C[Express API]
+    C --> D[(Cloud SQL database)]
+    C --> E[Commission engine]
+    E --> F[AI pre-submission review — Claude]
+    C --> G[PDF render]
+    G --> H[Cloud file storage]
+    C --> I[Email + SMS notifications]
+    J[AI call-center flows] --> C`,
+    techStack: [
+      "Node.js",
+      "Express",
+      "Azure SQL",
+      "Azure App Service",
+      "Microsoft Entra ID",
+      "Azure Blob Storage",
+      "Puppeteer",
+      "Anthropic Claude",
+      "Twilio",
+      "Power Automate",
+      "GitHub Actions",
+    ],
+    highlights: [
+      "Commission engine",
+      "AI submission review",
+      "PDF generation",
+      "Role-based access",
+      "CI/CD to Azure",
+      "Workflow-locked records",
+    ],
+    challenges: [
+      {
+        challenge: "Commission rules branch in many directions and the result has to match what accounting expects to the cent.",
+        solution:
+          "Built the split calculation as one engine on the server — percentage vs. flat fee, referrals in either direction, tiered program fees, agent split computed from gross minus referral — so the form, the PDF, and the reports all read the same numbers.",
+      },
+      {
+        challenge: "An LLM can't be trusted to do the arithmetic itself.",
+        solution:
+          "The server computes the math checks first and hands the results to the model, which only judges and explains them and must answer in a fixed JSON shape.",
+      },
+      {
+        challenge: "Financial records shouldn't be casually editable.",
+        solution:
+          "Deletes are only allowed within ten minutes of creation, status moves only through workflow buttons, and locked transactions need an explicit unlock step.",
+      },
+    ],
+    impact:
+      "Gave the brokerage a single system for deals, commission splits, and payout paperwork, deployed automatically on every push to the main branch.",
+    lessonsLearned: [
+      "Let the code do the math and the model do the reviewing — mixing the two is where AI features in finance go wrong.",
+      "Date and currency bugs (a timezone shift, a currency field that wouldn't save) were the ones users noticed first; they deserve tests before anything else.",
+    ],
+    futureImprovements: [
+      "Add automated tests around the commission engine.",
+      "Handle daylight-saving time in the scheduled weekly emails instead of a fixed offset.",
+    ],
+  },
+  {
+    slug: "building-materials-price-comparison",
+    status: "Personal project",
+    role: "Developer — scrapers, data pipeline, and front end",
+    name: "Building Materials Price Comparison",
+    category: "Data Pipelines / Web Scraping",
+    featured: true,
+    order: 5.3,
+    summary:
+      "A price-comparison app for construction materials, fed by 18 store scrapers that run on a daily schedule and report honestly on which sources are actually live.",
+    overview:
+      "A web app that compares prices for construction and hardware materials across Philippine retailers, so builders and homeowners don't have to check each store's site one by one. Eighteen scraper modules — one per store — collect products into a single normalized dataset on a daily automated run.",
+    problem:
+      "Every store runs a different e-commerce platform, several block or break scrapers without notice, and a pipeline that quietly falls back to stale data looks exactly like one that's working.",
+    businessGoal:
+      "Keep one comparable dataset of products and prices across stores, updated daily without a server or a database to maintain, and make it obvious which sources are fresh.",
+    solution:
+      "Each scraper tries a live source first — a storefront's product feed, parsed HTML, or the JSON a site embeds in its own pages — and falls back to a seed list if that fails. A runner executes stores one at a time, normalizes units, brands, and categories, and merges results into a products-and-offers file that only ever adds or updates. A scheduled GitHub Actions job runs it daily and commits the result; an admin page shows each store as live or not, with a labelled reason.",
+    architectureDiagram: `flowchart TD
+    A[Daily schedule — GitHub Actions] --> B[Scraper runner]
+    B --> C[18 store scrapers]
+    C -->|live source| D[Normalize units, brand, category]
+    C -->|fallback| E[Seed data]
+    E --> D
+    D --> F[Merge — add or update, never delete]
+    F --> G[Dataset committed to repo]
+    F --> H[Scraper health report]
+    G --> I[React front end]
+    H --> J[Admin health page]`,
+    techStack: ["React", "TypeScript", "Vite", "Tailwind CSS", "Node.js", "Cheerio", "GitHub Actions", "Vercel"],
+    highlights: [
+      "18 store scrapers",
+      "Daily scheduled runs",
+      "Data normalization",
+      "Scraper health reporting",
+      "No server or database",
+      "Bundle-size reduction",
+    ],
+    challenges: [
+      {
+        challenge: "Stores weren't running the platform they appeared to be.",
+        solution:
+          "Checked each one by hand and documented it in the scraper: two 'storefront-feed' stores were really a different platform, so the old scraper was following a catch-all redirect and only ever found about four products; another's prices were available in JSON embedded in the page, which avoided needing a headless browser at all.",
+      },
+      {
+        challenge: "Some catalogs use 999999 to mean 'price not set', which would have shown up as the most expensive item in every comparison.",
+        solution:
+          "Filtered placeholder prices with a rule strict enough to drop them while keeping genuine prices that happen to be all nines.",
+      },
+      {
+        challenge: "A data-safety check was failing the scheduled job on every run, so real failures were lost in the noise.",
+        solution:
+          "The check compared totals in a way that didn't hold once the dataset grew daily and only some stores scraped live. I downgraded it to a warning and added a per-store health report with the captured failure reason instead.",
+      },
+      {
+        challenge: "Shipping the dataset inside the app made the JavaScript bundle huge.",
+        solution:
+          "Moved the data out of the bundle to load in the background and replaced a quadratic category count with a single pass.",
+      },
+    ],
+    impact:
+      "A daily, unattended pipeline that grew the dataset to tens of thousands of products — and that says plainly which stores it could and couldn't reach on the last run. In the most recent run, 8 of the 18 stores scraped live; the rest are labelled with why not.",
+    metrics: [
+      { label: "Store scrapers", value: "18" },
+      { label: "Products in the dataset (latest run)", value: "28,053" },
+      { label: "Consecutive daily automated runs", value: "105" },
+      { label: "App JavaScript size", value: "3.3 MB → 305 KB" },
+    ],
+    lessonsLearned: [
+      "A fallback that looks like success is worse than a failure — every source needs a visible live / not-live status.",
+      "Identify the platform before writing the scraper; most 'broken' scrapers were pointed at the wrong kind of site.",
+    ],
+    futureImprovements: [
+      "Serve the daily dataset to the front end directly — the app currently loads an older snapshot.",
+      "Add tests for the normalizer and a build check to the scheduled workflow.",
     ],
   },
   {
@@ -575,6 +850,22 @@ export const projects: Project[] = [
     highlights: ["Preference-based recommendations", "Occasion-aware suggestions", "Detailed product guidance"],
     impact:
       "Replicated the guidance of an in-store fragrance consultant through a conversational interface.",
+  },
+  {
+    slug: "multiplayer-browser-fps",
+    status: "Prototype · in progress",
+    name: "Multiplayer Browser Shooter",
+    category: "Real-Time / Game Dev",
+    featured: false,
+    order: 9.5,
+    summary:
+      "A work-in-progress multiplayer first-person shooter that runs in the browser — a 64-tick game server, WebSocket networking, and a 3D client with physics-based movement.",
+    overview:
+      "A prototype multiplayer FPS with nothing to install. The client renders with Three.js and uses a physics engine for movement (sprint, crouch, slide, jump); the Node.js server runs lobbies and matchmaking, ticks the game 64 times a second, and broadcasts snapshots 20 times a second while the client draws other players slightly in the past to smooth them out. Accounts, match history, and a ranked leaderboard are stored in Postgres. It's an honest prototype: hits are reported by the client and sanity-checked by the server for fire rate and range, and full server-side reconciliation isn't built yet.",
+    techStack: ["React", "TypeScript", "Three.js", "cannon-es", "Socket.IO", "Node.js", "Express", "Supabase", "PostgreSQL", "JWT"],
+    highlights: ["Real-time networking", "Server tick loop", "Snapshot interpolation", "Matchmaking", "Leaderboard"],
+    impact:
+      "A hands-on way to learn real-time systems — tick rates, snapshot interpolation, and where to draw the line between client and server trust.",
   },
   {
     slug: "marketing-and-workflow-automation-systems",

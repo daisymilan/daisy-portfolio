@@ -78,6 +78,30 @@ export default async function CaseStudyPage({
               ))}
             </div>
 
+            {(project.status || project.role) && (
+              <dl
+                aria-label="At a glance"
+                className="mt-8 grid max-w-3xl gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-3"
+              >
+                {[
+                  { label: "Status", value: project.status },
+                  { label: "My role", value: project.role },
+                  { label: "Type", value: project.category },
+                ]
+                  .filter((row) => row.value)
+                  .map((row) => (
+                    <div key={row.label} className="bg-surface p-5">
+                      <dt className="font-mono text-xs uppercase tracking-widest text-muted">
+                        {row.label}
+                      </dt>
+                      <dd className="mt-2 text-sm font-medium leading-relaxed text-foreground">
+                        {row.value}
+                      </dd>
+                    </div>
+                  ))}
+              </dl>
+            )}
+
             {project.positioning && (
               <p className="mt-8 max-w-2xl border-l-2 border-accent-start pl-5 text-lg font-medium leading-relaxed text-foreground">
                 {project.positioning}

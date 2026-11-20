@@ -1,0 +1,47 @@
+---
+title: "Keep the automation layer thin"
+excerpt: "Where business logic should live when you combine an LLM, a workflow tool, and a database — and why I stopped putting decisions inside workflow nodes."
+date: "2026-11-21"
+---
+
+Workflow tools like n8n make it very easy to put logic in the wrong place. You add an IF node, then a Switch, then a Code node with a few rules in it, and six months later nobody can say where the decision to approve a lead is actually made.
+
+When I built [OpsPilot](/work/opspilot), an AI operations platform that analyzes leads and routes risky actions through human approval, I set one rule early: **the workflow tool sequences things, and the application decides things.** This post is about why.
+
+## The failure mode
+
+Most "AI automation" stacks I've seen go one of two ways. Either the model's output triggers actions directly, with nothing checking it, or every action waits for a human, which defeats the point of automating.
+
+Both come from the same root problem: there's no single, structured place where the system decides which actions are safe to run automatically.
+
+## Three layers, three jobs
+
+In OpsPilot each layer has one job.
+
+**The model proposes.** A lead is analyzed and the result comes back as structured output: a confidence score, a priority, and a recommended action. That output is validated against a schema before anything else sees it. If the model returns something malformed, it fails loudly at the boundary instead of quietly corrupting a decision further down.
+
+**The application decides.** Business rules evaluate the validated output and decide, per lead, whether the workflow can run on its own or needs a person first. Low confidence or high priority routes to a human approval queue, where the reviewer sees the model's score and reasoning inline. Authorization, validation, and audit logging all live here.
+
+**The workflow tool executes.** n8n is triggered once a lead is cleared. It runs the steps in order and reports back. It holds no rules about who is allowed to do what.
+
+## Why it's worth the discipline
+
+**One place to look.** When something surprising happens, the question "why did the system do that?" has one answer location: the application. It isn't split across workflow nodes, prompt text, and database triggers.
+
+**The workflow tool can't become a back door.** Inbound webhooks from the workflow tool are authenticated with a shared secret compared in constant time, and the tool's role stays limited to sequencing. Tenant isolation is enforced in the database with row-level security, so a bug in one query can't leak another organization's data.
+
+**Everything is reconstructable.** Every stage, from the model's analysis to the rule decision to the approval and the execution, writes to an append-only audit trail. You can explain what happened after the fact, not only watch it while it runs.
+
+**It's testable.** Rules in application code can have unit tests. Rules scattered across visual nodes mostly can't.
+
+## What surprised me
+
+Validating the model's output at the boundary caught more integration problems than any amount of prompt tuning. I'd expected the prompt to be the hard part. It was the contract.
+
+Keeping the orchestration layer thin also made the whole system easier to reason about, which I had hoped for but underestimated.
+
+## A rule of thumb
+
+If you're wiring an LLM into a workflow tool, ask of every piece of logic: *if this were wrong, where would I look?* If the answer is "it depends", move it into the application.
+
+The architecture diagram and the full list of engineering decisions are in the [OpsPilot case study](/work/opspilot).
